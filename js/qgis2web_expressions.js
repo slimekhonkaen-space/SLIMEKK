@@ -754,3 +754,30 @@ function fnc__specialcol_(values, context) {
 function fnc_project_color(values, context) {
     return false;
 };
+
+
+
+function exp_label_well_KKN_4_eval_expression(context) {
+    // replace("หมายเลขบ่อ", '"', '')
+
+    var feature = context.feature;
+    
+    if (feature.properties) {
+        return fnc_replace([feature.properties['หมายเลขบ่อ'] ,'"',''], context);
+    } else {
+        return fnc_replace([feature['หมายเลขบ่อ'] ,'"',''], context);
+    }
+}
+
+
+function exp_label_well_KKN_4_eval_expression(context) {
+    // replace("หมายเลขบ่อ", '"', '')
+
+    var feature = context.feature;
+    
+    if (feature.properties) {
+        return fnc_replace([feature.properties['หมายเลขบ่อ'] ,'"',''], context);
+    } else {
+        return fnc_replace([feature['หมายเลขบ่อ'] ,'"',''], context);
+    }
+}
