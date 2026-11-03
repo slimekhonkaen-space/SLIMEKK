@@ -10,6 +10,8 @@
         <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
         <link rel="stylesheet" href="css/qgis2web.css">
         <link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/MarkerCluster.css">
+        <link rel="stylesheet" href="css/MarkerCluster.Default.css">
         <link rel="stylesheet" href="css/leaflet.photon.css">
         <style>
         html, body, #map {
@@ -36,6 +38,7 @@
         <script src="js/labelgun.min.js"></script>
         <script src="js/labels.js"></script>
         <script src="js/leaflet.photon.js"></script>
+        <script src="js/leaflet.markercluster.js"></script>
         <script src="data/_2.js"></script>
         <script src="data/_3.js"></script>
         <script src="data/_4.js"></script>
@@ -45,6 +48,11 @@
         <script src="data/_8.js"></script>
         <script src="data/_9.js"></script>
         <script src="data/_10.js"></script>
+        <script src="data/_11.js"></script>
+        <script src="data/_12.js"></script>
+        <script src="data/_13.js"></script>
+        <script src="data/_14.js"></script>
+        <script src="data/_15.js"></script>
         <script>
         var highlightLayer;
         function highlightFeature(e) {
@@ -63,7 +71,7 @@
         }
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
-        }).fitBounds([[15.724650899083285,102.62164497480977],[16.069776272807587,103.08376910827779]]);
+        })
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/qgis2web/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -144,6 +152,9 @@
         }).addTo(map);
         var bounds_group = new L.featureGroup([]);
         function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
             map.setMaxBounds(map.getBounds());
             map.setMinZoom(map.getZoom());
         }
@@ -159,7 +170,6 @@
             maxNativeZoom: 20
         });
         layer_GoogleTerrain_0;
-        map.addLayer(layer_GoogleTerrain_0);
         map.createPane('pane_GoogleSatellite_1');
         map.getPane('pane_GoogleSatellite_1').style.zIndex = 401;
         var layer_GoogleSatellite_1 = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
@@ -186,13 +196,603 @@
             });
             var popupContent = '<table>\
                     <tr>\
+                        <td colspan="2">' + (feature.properties['HYDROUNT'] !== null ? autolinker.link(String(feature.properties['HYDROUNT']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['DESCRIPT_T'] !== null ? autolinker.link(String(feature.properties['DESCRIPT_T']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['DESCRIPT_E'] !== null ? autolinker.link(String(feature.properties['DESCRIPT_E']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style__2_0(feature) {
+            switch(String(feature.properties['DESCRIPT_T'])) {
+                case 'ชั้นหินอุ้มน้ำหินชุดมหาสารคาม':
+                    return {
+                pane: 'pane__2',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(166,206,227,1.0)',
+                interactive: false,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane__2');
+        map.getPane('pane__2').style.zIndex = 402;
+        map.getPane('pane__2').style['mix-blend-mode'] = 'normal';
+        var layer__2 = new L.geoJson(json__2, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json__2',
+            layerName: 'layer__2',
+            pane: 'pane__2',
+            onEachFeature: pop__2,
+            style: style__2_0,
+        });
+        bounds_group.addLayer(layer__2);
+        function pop__3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Symbol'] !== null ? autolinker.link(String(feature.properties['Symbol']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Group_'] !== null ? autolinker.link(String(feature.properties['Group_']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Formation'] !== null ? autolinker.link(String(feature.properties['Formation']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Age'] !== null ? autolinker.link(String(feature.properties['Age']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Desc_T1'] !== null ? autolinker.link(String(feature.properties['Desc_T1']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style__3_0(feature) {
+            switch(String(feature.properties['Formation'])) {
+                case 'ตะกอนธารน้ำพา':
+                    return {
+                pane: 'pane__3',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,255,204,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'ภูทอก':
+                    return {
+                pane: 'pane__3',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(170,224,122,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'มหาสารคาม':
+                    return {
+                pane: 'pane__3',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(51,160,44,1.0)',
+                interactive: false,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane__3');
+        map.getPane('pane__3').style.zIndex = 403;
+        map.getPane('pane__3').style['mix-blend-mode'] = 'normal';
+        var layer__3 = new L.geoJson(json__3, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json__3',
+            layerName: 'layer__3',
+            pane: 'pane__3',
+            onEachFeature: pop__3,
+            style: style__3_0,
+        });
+        bounds_group.addLayer(layer__3);
+        function pop__4(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['DR_DESTH'] !== null ? autolinker.link(String(feature.properties['DR_DESTH']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style__4_0(feature) {
+            switch(String(feature.properties['DR_DESTH'])) {
+                case 'ไม่เกิน 3 ครั้งในรอบ 10 ปี':
+                    return {
+                pane: 'pane__4',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,255,42,1.0)',
+                interactive: false,
+            }
+                    break;
+                case '4-5 ครั้งในรอบ 10 ปี':
+                    return {
+                pane: 'pane__4',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,168,18,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'ตั้งแต่ 6 ครั้งขึ้นไปในรอบ 10 ปี':
+                    return {
+                pane: 'pane__4',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,0,0,1.0)',
+                interactive: false,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane__4');
+        map.getPane('pane__4').style.zIndex = 404;
+        map.getPane('pane__4').style['mix-blend-mode'] = 'normal';
+        var layer__4 = new L.geoJson(json__4, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json__4',
+            layerName: 'layer__4',
+            pane: 'pane__4',
+            onEachFeature: pop__4,
+            style: style__4_0,
+        });
+        bounds_group.addLayer(layer__4);
+        function pop__5(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['pH_top'] !== null ? autolinker.link(String(feature.properties['pH_top']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['soilserien'] !== null ? autolinker.link(String(feature.properties['soilserien']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['texture_to'] !== null ? autolinker.link(String(feature.properties['texture_to']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style__5_0(feature) {
+            switch(String(feature.properties['soilserien'])) {
+                case 'กุลาร้องไห้':
+                    return {
+                pane: 'pane__5',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(149,203,120,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'คง':
+                    return {
+                pane: 'pane__5',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(79,88,179,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'โนนแดง':
+                    return {
+                pane: 'pane__5',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(238,243,163,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'บ้านไผ่':
+                    return {
+                pane: 'pane__5',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(81,147,137,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'พล':
+                    return {
+                pane: 'pane__5',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(166,101,231,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'พื้นที่น้ำ':
+                    return {
+                pane: 'pane__5',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(183,115,102,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'มหาสารคาม':
+                    return {
+                pane: 'pane__5',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,229,126,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'ร้อยเอ็ด':
+                    return {
+                pane: 'pane__5',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(160,234,209,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'อุบล':
+                    return {
+                pane: 'pane__5',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(250,172,170,1.0)',
+                interactive: false,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane__5');
+        map.getPane('pane__5').style.zIndex = 405;
+        map.getPane('pane__5').style['mix-blend-mode'] = 'normal';
+        var layer__5 = new L.geoJson(json__5, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json__5',
+            layerName: 'layer__5',
+            pane: 'pane__5',
+            onEachFeature: pop__5,
+            style: style__5_0,
+        });
+        bounds_group.addLayer(layer__5);
+        function pop__6(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['class'] !== null ? autolinker.link(String(feature.properties['class']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style__6_0(feature) {
+            switch(String(feature.properties['class'])) {
+                case 'กล้วย':
+                    return {
+                pane: 'pane__6',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(251,255,181,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'ข้าวโพด':
+                    return {
+                pane: 'pane__6',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(209,254,109,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'นาข้าว':
+                    return {
+                pane: 'pane__6',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,252,11,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'ปศุสัตว์':
+                    return {
+                pane: 'pane__6',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,209,123,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'ป่าไม้':
+                    return {
+                pane: 'pane__6',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(6,112,76,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'ปาล์มน้ำมัน':
+                    return {
+                pane: 'pane__6',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(51,170,0,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'พื้นที่เกษตรกรรม':
+                    return {
+                pane: 'pane__6',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(206,255,195,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'พื้นที่ชุมชน':
+                    return {
+                pane: 'pane__6',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(240,0,2,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'พื้นที่เบ็ดเตล็ด':
+                    return {
+                pane: 'pane__6',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(156,155,156,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'มะม่วง':
+                    return {
+                pane: 'pane__6',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(189,254,232,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'มันสำปะหลัง':
+                    return {
+                pane: 'pane__6',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(254,236,174,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'ยางพารา':
+                    return {
+                pane: 'pane__6',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(77,115,5,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'ยูคาลิปตัส':
+                    return {
+                pane: 'pane__6',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(171,164,13,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'สัก':
+                    return {
+                pane: 'pane__6',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(226,232,2,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'เหมือง':
+                    return {
+                pane: 'pane__6',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(204,204,204,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'แหล่งน้ำ':
+                    return {
+                pane: 'pane__6',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,97,228,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'อ้อย':
+                    return {
+                pane: 'pane__6',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(253,255,108,1.0)',
+                interactive: false,
+            }
+                    break;
+                case 'อุตสาหกรรม':
+                    return {
+                pane: 'pane__6',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(254,168,3,1.0)',
+                interactive: false,
+            }
+                    break;
+                default:
+                    return {
+                pane: 'pane__6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(81,222,52,1.0)',
+                interactive: false,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane__6');
+        map.getPane('pane__6').style.zIndex = 406;
+        map.getPane('pane__6').style['mix-blend-mode'] = 'normal';
+        var layer__6 = new L.geoJson(json__6, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json__6',
+            layerName: 'layer__6',
+            pane: 'pane__6',
+            onEachFeature: pop__6,
+            style: style__6_0,
+        });
+        bounds_group.addLayer(layer__6);
+        function pop__7(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
                         <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td class="visible-with-data" id="หมายเลขบ่อ" colspan="2"><strong>หมายเลขบ่อ</strong><br />' + (feature.properties['หมายเลขบ่อ'] !== null ? autolinker.link(String(feature.properties['หมายเลขบ่อ']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <th scope="row">หมายเลขบ่อ</th>\
+                        <td>' + (feature.properties['หมายเลขบ่อ'] !== null ? autolinker.link(String(feature.properties['หมายเลขบ่อ']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['ตำบล'] !== null ? autolinker.link(String(feature.properties['ตำบล']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -235,9 +835,9 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style__2_0() {
+        function style__7_0() {
             return {
-                pane: 'pane__2',
+                pane: 'pane__7',
                 radius: 4.0,
                 opacity: 1,
                 color: 'rgba(35,35,35,1.0)',
@@ -251,620 +851,29 @@
                 interactive: true,
             }
         }
-        map.createPane('pane__2');
-        map.getPane('pane__2').style.zIndex = 402;
-        map.getPane('pane__2').style['mix-blend-mode'] = 'normal';
-        var layer__2 = new L.geoJson(json__2, {
-            attribution: '',
-            interactive: true,
-            dataVar: 'json__2',
-            layerName: 'layer__2',
-            pane: 'pane__2',
-            onEachFeature: pop__2,
-            pointToLayer: function (feature, latlng) {
-                var context = {
-                    feature: feature,
-                    variables: {}
-                };
-                return L.circleMarker(latlng, style__2_0(feature));
-            },
-        });
-        bounds_group.addLayer(layer__2);
-        map.addLayer(layer__2);
-        function pop__3(feature, layer) {
-            layer.on({
-                mouseout: function(e) {
-                    for (var i in e.target._eventParents) {
-                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
-                            e.target._eventParents[i].resetStyle(e.target);
-                        }
-                    }
-                },
-                mouseover: highlightFeature,
-            });
-            var popupContent = '<table>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['HYDROUNT'] !== null ? autolinker.link(String(feature.properties['HYDROUNT']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['DESCRIPT_T'] !== null ? autolinker.link(String(feature.properties['DESCRIPT_T']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['DESCRIPT_E'] !== null ? autolinker.link(String(feature.properties['DESCRIPT_E']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
-        }
-
-        function style__3_0(feature) {
-            switch(String(feature.properties['DESCRIPT_T'])) {
-                case 'ชั้นหินอุ้มน้ำหินชุดมหาสารคาม':
-                    return {
-                pane: 'pane__3',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(166,206,227,1.0)',
-                interactive: false,
-            }
-                    break;
-            }
-        }
-        map.createPane('pane__3');
-        map.getPane('pane__3').style.zIndex = 403;
-        map.getPane('pane__3').style['mix-blend-mode'] = 'normal';
-        var layer__3 = new L.geoJson(json__3, {
-            attribution: '',
-            interactive: false,
-            dataVar: 'json__3',
-            layerName: 'layer__3',
-            pane: 'pane__3',
-            onEachFeature: pop__3,
-            style: style__3_0,
-        });
-        bounds_group.addLayer(layer__3);
-        map.addLayer(layer__3);
-        function pop__4(feature, layer) {
-            layer.on({
-                mouseout: function(e) {
-                    for (var i in e.target._eventParents) {
-                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
-                            e.target._eventParents[i].resetStyle(e.target);
-                        }
-                    }
-                },
-                mouseover: highlightFeature,
-            });
-            var popupContent = '<table>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Symbol'] !== null ? autolinker.link(String(feature.properties['Symbol']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Group_'] !== null ? autolinker.link(String(feature.properties['Group_']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Formation'] !== null ? autolinker.link(String(feature.properties['Formation']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Age'] !== null ? autolinker.link(String(feature.properties['Age']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Desc_T1'] !== null ? autolinker.link(String(feature.properties['Desc_T1']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
-        }
-
-        function style__4_0(feature) {
-            switch(String(feature.properties['Formation'])) {
-                case 'ตะกอนธารน้ำพา':
-                    return {
-                pane: 'pane__4',
-                opacity: 1,
-                color: 'rgba(35,35,35,0.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(255,255,204,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'ภูทอก':
-                    return {
-                pane: 'pane__4',
-                opacity: 1,
-                color: 'rgba(35,35,35,0.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(170,224,122,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'มหาสารคาม':
-                    return {
-                pane: 'pane__4',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(51,160,44,1.0)',
-                interactive: false,
-            }
-                    break;
-            }
-        }
-        map.createPane('pane__4');
-        map.getPane('pane__4').style.zIndex = 404;
-        map.getPane('pane__4').style['mix-blend-mode'] = 'normal';
-        var layer__4 = new L.geoJson(json__4, {
-            attribution: '',
-            interactive: false,
-            dataVar: 'json__4',
-            layerName: 'layer__4',
-            pane: 'pane__4',
-            onEachFeature: pop__4,
-            style: style__4_0,
-        });
-        bounds_group.addLayer(layer__4);
-        map.addLayer(layer__4);
-        function pop__5(feature, layer) {
-            layer.on({
-                mouseout: function(e) {
-                    for (var i in e.target._eventParents) {
-                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
-                            e.target._eventParents[i].resetStyle(e.target);
-                        }
-                    }
-                },
-                mouseover: highlightFeature,
-            });
-            var popupContent = '<table>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['DR_DESTH'] !== null ? autolinker.link(String(feature.properties['DR_DESTH']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
-        }
-
-        function style__5_0(feature) {
-            switch(String(feature.properties['DR_DESTH'])) {
-                case 'ไม่เกิน 3 ครั้งในรอบ 10 ปี':
-                    return {
-                pane: 'pane__5',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(255,255,42,1.0)',
-                interactive: false,
-            }
-                    break;
-                case '4-5 ครั้งในรอบ 10 ปี':
-                    return {
-                pane: 'pane__5',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(241,168,18,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'ตั้งแต่ 6 ครั้งขึ้นไปในรอบ 10 ปี':
-                    return {
-                pane: 'pane__5',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(255,0,0,1.0)',
-                interactive: false,
-            }
-                    break;
-            }
-        }
-        map.createPane('pane__5');
-        map.getPane('pane__5').style.zIndex = 405;
-        map.getPane('pane__5').style['mix-blend-mode'] = 'normal';
-        var layer__5 = new L.geoJson(json__5, {
-            attribution: '',
-            interactive: false,
-            dataVar: 'json__5',
-            layerName: 'layer__5',
-            pane: 'pane__5',
-            onEachFeature: pop__5,
-            style: style__5_0,
-        });
-        bounds_group.addLayer(layer__5);
-        map.addLayer(layer__5);
-        function pop__6(feature, layer) {
-            layer.on({
-                mouseout: function(e) {
-                    for (var i in e.target._eventParents) {
-                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
-                            e.target._eventParents[i].resetStyle(e.target);
-                        }
-                    }
-                },
-                mouseover: highlightFeature,
-            });
-            var popupContent = '<table>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['pH_top'] !== null ? autolinker.link(String(feature.properties['pH_top']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['soilserien'] !== null ? autolinker.link(String(feature.properties['soilserien']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['texture_to'] !== null ? autolinker.link(String(feature.properties['texture_to']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
-        }
-
-        function style__6_0(feature) {
-            switch(String(feature.properties['soilserien'])) {
-                case 'กุลาร้องไห้':
-                    return {
-                pane: 'pane__6',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(149,203,120,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'คง':
-                    return {
-                pane: 'pane__6',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(79,88,179,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'โนนแดง':
-                    return {
-                pane: 'pane__6',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(238,243,163,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'บ้านไผ่':
-                    return {
-                pane: 'pane__6',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(81,147,137,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'พล':
-                    return {
-                pane: 'pane__6',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(166,101,231,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'พื้นที่น้ำ':
-                    return {
-                pane: 'pane__6',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(183,115,102,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'มหาสารคาม':
-                    return {
-                pane: 'pane__6',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(255,229,126,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'ร้อยเอ็ด':
-                    return {
-                pane: 'pane__6',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(160,234,209,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'อุบล':
-                    return {
-                pane: 'pane__6',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(250,172,170,1.0)',
-                interactive: false,
-            }
-                    break;
-            }
-        }
-        map.createPane('pane__6');
-        map.getPane('pane__6').style.zIndex = 406;
-        map.getPane('pane__6').style['mix-blend-mode'] = 'normal';
-        var layer__6 = new L.geoJson(json__6, {
-            attribution: '',
-            interactive: false,
-            dataVar: 'json__6',
-            layerName: 'layer__6',
-            pane: 'pane__6',
-            onEachFeature: pop__6,
-            style: style__6_0,
-        });
-        bounds_group.addLayer(layer__6);
-        map.addLayer(layer__6);
-        function pop__7(feature, layer) {
-            layer.on({
-                mouseout: function(e) {
-                    for (var i in e.target._eventParents) {
-                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
-                            e.target._eventParents[i].resetStyle(e.target);
-                        }
-                    }
-                },
-                mouseover: highlightFeature,
-            });
-            var popupContent = '<table>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['class'] !== null ? autolinker.link(String(feature.properties['class']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
-        }
-
-        function style__7_0(feature) {
-            switch(String(feature.properties['class'])) {
-                case 'กล้วย':
-                    return {
-                pane: 'pane__7',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(251,255,181,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'ข้าวโพด':
-                    return {
-                pane: 'pane__7',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(209,254,109,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'นาข้าว':
-                    return {
-                pane: 'pane__7',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(255,252,11,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'ปศุสัตว์':
-                    return {
-                pane: 'pane__7',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(255,209,123,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'ป่าไม้':
-                    return {
-                pane: 'pane__7',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(6,112,76,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'ปาล์มน้ำมัน':
-                    return {
-                pane: 'pane__7',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(51,170,0,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'พื้นที่เกษตรกรรม':
-                    return {
-                pane: 'pane__7',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(206,255,195,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'พื้นที่ชุมชน':
-                    return {
-                pane: 'pane__7',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(240,0,2,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'พื้นที่เบ็ดเตล็ด':
-                    return {
-                pane: 'pane__7',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(156,155,156,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'มะม่วง':
-                    return {
-                pane: 'pane__7',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(189,254,232,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'มันสำปะหลัง':
-                    return {
-                pane: 'pane__7',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(254,236,174,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'ยางพารา':
-                    return {
-                pane: 'pane__7',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(77,115,5,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'ยูคาลิปตัส':
-                    return {
-                pane: 'pane__7',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(171,164,13,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'สัก':
-                    return {
-                pane: 'pane__7',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(226,232,2,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'เหมือง':
-                    return {
-                pane: 'pane__7',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(204,204,204,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'แหล่งน้ำ':
-                    return {
-                pane: 'pane__7',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(0,97,228,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'อ้อย':
-                    return {
-                pane: 'pane__7',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(253,255,108,1.0)',
-                interactive: false,
-            }
-                    break;
-                case 'อุตสาหกรรม':
-                    return {
-                pane: 'pane__7',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(254,168,3,1.0)',
-                interactive: false,
-            }
-                    break;
-                default:
-                    return {
-                pane: 'pane__7',
-                opacity: 1,
-                color: 'rgba(35,35,35,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(81,222,52,1.0)',
-                interactive: false,
-            }
-                    break;
-            }
-        }
         map.createPane('pane__7');
         map.getPane('pane__7').style.zIndex = 407;
         map.getPane('pane__7').style['mix-blend-mode'] = 'normal';
         var layer__7 = new L.geoJson(json__7, {
             attribution: '',
-            interactive: false,
+            interactive: true,
             dataVar: 'json__7',
             layerName: 'layer__7',
             pane: 'pane__7',
             onEachFeature: pop__7,
-            style: style__7_0,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style__7_0(feature));
+            },
         });
+        var cluster__7 = new L.MarkerClusterGroup({showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2});
+        cluster__7.addLayer(layer__7);
+
         bounds_group.addLayer(layer__7);
-        map.addLayer(layer__7);
         function pop__8(feature, layer) {
             layer.on({
                 mouseout: function(e) {
@@ -1031,105 +1040,16 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style__10_0(feature) {
-            switch(String(feature.properties['no'])) {
-                default:
-                    return {
+        function style__10_0() {
+            return {
                 pane: 'pane__10',
-                shape: 'triangle',
-                radius: 7.2,
-                opacity: 1,
-                color: 'rgba(255,255,255,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 2.0,
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(0,0,0,1.0)',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/_10.svg',
+            iconSize: [38.0, 38.0]
+        }),
                 interactive: true,
-            }
-                    break;
-                case '1':
-                    return {
-                pane: 'pane__10',
-                radius: 8.0,
-                opacity: 1,
-                color: 'rgba(0,0,0,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1,
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(0,0,0,1.0)',
-                interactive: true,
-            }
-                    break;
-                case '2':
-                    return {
-                pane: 'pane__10',
-                radius: 8.0,
-                opacity: 1,
-                color: 'rgba(0,0,0,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1,
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(0,0,0,1.0)',
-                interactive: true,
-            }
-                    break;
-                case '3':
-                    return {
-                pane: 'pane__10',
-                radius: 8.0,
-                opacity: 1,
-                color: 'rgba(0,0,0,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1,
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(0,0,0,1.0)',
-                interactive: true,
-            }
-                    break;
-                case '4':
-                    return {
-                pane: 'pane__10',
-                radius: 8.0,
-                opacity: 1,
-                color: 'rgba(0,0,0,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1,
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(0,0,0,1.0)',
-                interactive: true,
-            }
-                    break;
-                case '5':
-                    return {
-                pane: 'pane__10',
-                radius: 8.0,
-                opacity: 1,
-                color: 'rgba(0,0,0,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1,
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(0,0,0,1.0)',
-                interactive: true,
-            }
-                    break;
             }
         }
         map.createPane('pane__10');
@@ -1147,36 +1067,397 @@
                     feature: feature,
                     variables: {}
                 };
-                return L.circleMarker(latlng, style__10_0(feature));
+                return L.marker(latlng, style__10_0(feature));
             },
         });
         bounds_group.addLayer(layer__10);
         map.addLayer(layer__10);
+        function pop__11(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Name</th>\
+                        <td>' + (feature.properties['Name'] !== null ? autolinker.link(String(feature.properties['Name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['no'] !== null ? autolinker.link(String(feature.properties['no']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style__11_0() {
+            return {
+                pane: 'pane__11',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/_11.svg',
+            iconSize: [38.0, 38.0]
+        }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane__11');
+        map.getPane('pane__11').style.zIndex = 411;
+        map.getPane('pane__11').style['mix-blend-mode'] = 'normal';
+        var layer__11 = new L.geoJson(json__11, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json__11',
+            layerName: 'layer__11',
+            pane: 'pane__11',
+            onEachFeature: pop__11,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style__11_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer__11);
+        map.addLayer(layer__11);
+        function pop__12(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Name</th>\
+                        <td>' + (feature.properties['Name'] !== null ? autolinker.link(String(feature.properties['Name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['no'] !== null ? autolinker.link(String(feature.properties['no']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style__12_0() {
+            return {
+                pane: 'pane__12',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/_12.svg',
+            iconSize: [38.0, 38.0]
+        }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane__12');
+        map.getPane('pane__12').style.zIndex = 412;
+        map.getPane('pane__12').style['mix-blend-mode'] = 'normal';
+        var layer__12 = new L.geoJson(json__12, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json__12',
+            layerName: 'layer__12',
+            pane: 'pane__12',
+            onEachFeature: pop__12,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style__12_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer__12);
+        map.addLayer(layer__12);
+        function pop__13(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Name</th>\
+                        <td>' + (feature.properties['Name'] !== null ? autolinker.link(String(feature.properties['Name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['no'] !== null ? autolinker.link(String(feature.properties['no']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style__13_0() {
+            return {
+                pane: 'pane__13',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/_13.svg',
+            iconSize: [38.0, 38.0]
+        }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane__13');
+        map.getPane('pane__13').style.zIndex = 413;
+        map.getPane('pane__13').style['mix-blend-mode'] = 'normal';
+        var layer__13 = new L.geoJson(json__13, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json__13',
+            layerName: 'layer__13',
+            pane: 'pane__13',
+            onEachFeature: pop__13,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style__13_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer__13);
+        map.addLayer(layer__13);
+        function pop__14(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Name</th>\
+                        <td>' + (feature.properties['Name'] !== null ? autolinker.link(String(feature.properties['Name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['no'] !== null ? autolinker.link(String(feature.properties['no']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style__14_0() {
+            return {
+                pane: 'pane__14',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/_14.svg',
+            iconSize: [38.0, 38.0]
+        }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane__14');
+        map.getPane('pane__14').style.zIndex = 414;
+        map.getPane('pane__14').style['mix-blend-mode'] = 'normal';
+        var layer__14 = new L.geoJson(json__14, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json__14',
+            layerName: 'layer__14',
+            pane: 'pane__14',
+            onEachFeature: pop__14,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style__14_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer__14);
+        map.addLayer(layer__14);
+        function pop__15(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Name</th>\
+                        <td>' + (feature.properties['Name'] !== null ? autolinker.link(String(feature.properties['Name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['no'] !== null ? autolinker.link(String(feature.properties['no']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style__15_0() {
+            return {
+                pane: 'pane__15',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/_15.svg',
+            iconSize: [57.0, 57.0]
+        }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane__15');
+        map.getPane('pane__15').style.zIndex = 415;
+        map.getPane('pane__15').style['mix-blend-mode'] = 'normal';
+        var layer__15 = new L.geoJson(json__15, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json__15',
+            layerName: 'layer__15',
+            pane: 'pane__15',
+            onEachFeature: pop__15,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style__15_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer__15);
+        map.addLayer(layer__15);
         map.on("zoomend", function(e) {
             if (map.getZoom() <= 19 && map.getZoom() >= 10) {
                 map.addLayer(layer__9);
             } else if (map.getZoom() > 19 || map.getZoom() < 10) {
                 map.removeLayer(layer__9);
             }
+            if (map.getZoom() <= 19 && map.getZoom() >= 10) {
+                map.addLayer(layer__10);
+            } else if (map.getZoom() > 19 || map.getZoom() < 10) {
+                map.removeLayer(layer__10);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 10) {
+                map.addLayer(layer__11);
+            } else if (map.getZoom() > 19 || map.getZoom() < 10) {
+                map.removeLayer(layer__11);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 10) {
+                map.addLayer(layer__12);
+            } else if (map.getZoom() > 19 || map.getZoom() < 10) {
+                map.removeLayer(layer__12);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 10) {
+                map.addLayer(layer__13);
+            } else if (map.getZoom() > 19 || map.getZoom() < 10) {
+                map.removeLayer(layer__13);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 10) {
+                map.addLayer(layer__14);
+            } else if (map.getZoom() > 19 || map.getZoom() < 10) {
+                map.removeLayer(layer__14);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 10) {
+                map.addLayer(layer__15);
+            } else if (map.getZoom() > 19 || map.getZoom() < 10) {
+                map.removeLayer(layer__15);
+            }
         });
             if (map.getZoom() <= 19 && map.getZoom() >= 10) {
                 map.addLayer(layer__9);
             } else if (map.getZoom() > 19 || map.getZoom() < 10) {
                 map.removeLayer(layer__9);
             }
+            if (map.getZoom() <= 19 && map.getZoom() >= 10) {
+                map.addLayer(layer__10);
+            } else if (map.getZoom() > 19 || map.getZoom() < 10) {
+                map.removeLayer(layer__10);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 10) {
+                map.addLayer(layer__11);
+            } else if (map.getZoom() > 19 || map.getZoom() < 10) {
+                map.removeLayer(layer__11);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 10) {
+                map.addLayer(layer__12);
+            } else if (map.getZoom() > 19 || map.getZoom() < 10) {
+                map.removeLayer(layer__12);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 10) {
+                map.addLayer(layer__13);
+            } else if (map.getZoom() > 19 || map.getZoom() < 10) {
+                map.removeLayer(layer__13);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 10) {
+                map.addLayer(layer__14);
+            } else if (map.getZoom() > 19 || map.getZoom() < 10) {
+                map.removeLayer(layer__14);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 10) {
+                map.addLayer(layer__15);
+            } else if (map.getZoom() > 19 || map.getZoom() < 10) {
+                map.removeLayer(layer__15);
+            }
         var overlaysTree = [
-            {label: 'สถานีตรวจวัดอากาศ/ความชื้น<br /><table><tr><td style="text-align: center;"><img src="legend/_10_สำนกงานเกษตรอำเภอเปอยนอย0.png" /></td><td>สำนักงานเกษตรอำเภอเปือยน้อย</td></tr><tr><td style="text-align: center;"><img src="legend/_10_อะโวคาโด1.png" /></td><td>อะโวคาโด</td></tr><tr><td style="text-align: center;"><img src="legend/_10_มะมวงเขยวเสวย2.png" /></td><td>มะม่วงเขียวเสวย</td></tr><tr><td style="text-align: center;"><img src="legend/_10_มะมวงนำดอกไม3.png" /></td><td>มะม่วงน้ำดอกไม้</td></tr><tr><td style="text-align: center;"><img src="legend/_10_มะมวงนำดอกไม4.png" /></td><td>มะม่วงน้ำดอกไม้</td></tr><tr><td style="text-align: center;"><img src="legend/_10_มะมวงนำดอกไม5.png" /></td><td>มะม่วงน้ำดอกไม้</td></tr></table>', layer: layer__10},
-        {label: '<b>ขอบเขตปกครอง</b>',  selectAllCheckbox: true, children: [
+        {label: '<b>สถานีตรวจวัดอากาศ/ความชื้นดิน</b>', collapsed: true, selectAllCheckbox: true, children: [
+            {label: '<img src="legend/_15.png" /> สำนักงานเกษตรอำเภอเปือยน้อย', layer: layer__15},
+            {label: '<img src="legend/_14.png" /> อะโวคาโด', layer: layer__14},
+            {label: '<img src="legend/_13.png" /> มะม่วงเขียวเสวย', layer: layer__13},
+            {label: '<img src="legend/_12.png" /> มะม่วงน้ำดอกไม้', layer: layer__12},
+            {label: '<img src="legend/_11.png" /> มะม่วงน้ำดอกไม้', layer: layer__11},
+            {label: '<img src="legend/_10.png" /> มะม่วงน้ำดอกไม้', layer: layer__10},]},
+        {label: '<b>ขอบเขตปกครอง</b>', collapsed: true, selectAllCheckbox: true, children: [
             {label: '<img src="legend/_9.png" /> ขอบเขตตำบล', layer: layer__9},
             {label: '<img src="legend/_8.png" /> พื้นที่โครงการ', layer: layer__8},]},
         {label: '<b>ข้อมูลพื้นฐาน</b>', collapsed: true, selectAllCheckbox: true, children: [
-            {label: 'การใช้ประโยชน์ที่ดิน<br /><table><tr><td style="text-align: center;"><img src="legend/_7_กลวย0.png" /></td><td>กล้วย</td></tr><tr><td style="text-align: center;"><img src="legend/_7_ขาวโพด1.png" /></td><td>ข้าวโพด</td></tr><tr><td style="text-align: center;"><img src="legend/_7_นาขาว2.png" /></td><td>นาข้าว</td></tr><tr><td style="text-align: center;"><img src="legend/_7_ปศสตว3.png" /></td><td>ปศุสัตว์</td></tr><tr><td style="text-align: center;"><img src="legend/_7_ปาไม4.png" /></td><td>ป่าไม้</td></tr><tr><td style="text-align: center;"><img src="legend/_7_ปาลมนำมน5.png" /></td><td>ปาล์มน้ำมัน</td></tr><tr><td style="text-align: center;"><img src="legend/_7_พนทเกษตรกรรม6.png" /></td><td>พื้นที่เกษตรกรรม</td></tr><tr><td style="text-align: center;"><img src="legend/_7_พนทชมชน7.png" /></td><td>พื้นที่ชุมชน</td></tr><tr><td style="text-align: center;"><img src="legend/_7_พนทเบดเตลด8.png" /></td><td>พื้นที่เบ็ดเตล็ด</td></tr><tr><td style="text-align: center;"><img src="legend/_7_มะมวง9.png" /></td><td>มะม่วง</td></tr><tr><td style="text-align: center;"><img src="legend/_7_มนสำปะหลง10.png" /></td><td>มันสำปะหลัง</td></tr><tr><td style="text-align: center;"><img src="legend/_7_ยางพารา11.png" /></td><td>ยางพารา</td></tr><tr><td style="text-align: center;"><img src="legend/_7_ยคาลปตส12.png" /></td><td>ยูคาลิปตัส</td></tr><tr><td style="text-align: center;"><img src="legend/_7_สก13.png" /></td><td>สัก</td></tr><tr><td style="text-align: center;"><img src="legend/_7_เหมอง14.png" /></td><td>เหมือง</td></tr><tr><td style="text-align: center;"><img src="legend/_7_แหลงนำ15.png" /></td><td>แหล่งน้ำ</td></tr><tr><td style="text-align: center;"><img src="legend/_7_ออย16.png" /></td><td>อ้อย</td></tr><tr><td style="text-align: center;"><img src="legend/_7_อตสาหกรรม17.png" /></td><td>อุตสาหกรรม</td></tr><tr><td style="text-align: center;"><img src="legend/_7_18.png" /></td><td></td></tr></table>', layer: layer__7},
-            {label: 'ชุดดิน<br /><table><tr><td style="text-align: center;"><img src="legend/_6_กลารองไห0.png" /></td><td>กุลาร้องไห้</td></tr><tr><td style="text-align: center;"><img src="legend/_6_คง1.png" /></td><td>คง</td></tr><tr><td style="text-align: center;"><img src="legend/_6_โนนแดง2.png" /></td><td>โนนแดง</td></tr><tr><td style="text-align: center;"><img src="legend/_6_บานไผ3.png" /></td><td>บ้านไผ่</td></tr><tr><td style="text-align: center;"><img src="legend/_6_พล4.png" /></td><td>พล</td></tr><tr><td style="text-align: center;"><img src="legend/_6_พนทนำ5.png" /></td><td>พื้นที่น้ำ</td></tr><tr><td style="text-align: center;"><img src="legend/_6_มหาสารคาม6.png" /></td><td>มหาสารคาม</td></tr><tr><td style="text-align: center;"><img src="legend/_6_รอยเอด7.png" /></td><td>ร้อยเอ็ด</td></tr><tr><td style="text-align: center;"><img src="legend/_6_อบล8.png" /></td><td>อุบล</td></tr></table>', layer: layer__6},
-            {label: 'พื้นที่เสี่ยงภัยแล้ง<br /><table><tr><td style="text-align: center;"><img src="legend/_5_ไมเกน3ครงในรอบ10ป0.png" /></td><td>ไม่เกิน 3 ครั้งในรอบ 10 ปี</td></tr><tr><td style="text-align: center;"><img src="legend/_5_45ครงในรอบ10ป1.png" /></td><td>4-5 ครั้งในรอบ 10 ปี</td></tr><tr><td style="text-align: center;"><img src="legend/_5_ตงแต6ครงขนไปในรอบ10ป2.png" /></td><td>ตั้งแต่ 6 ครั้งขึ้นไปในรอบ 10 ปี</td></tr></table>', layer: layer__5},
-            {label: 'หน่วยหินทางธรณีวิทยา<br /><table><tr><td style="text-align: center;"><img src="legend/_4_ตะกอนธารนำพา0.png" /></td><td>ตะกอนธารน้ำพา</td></tr><tr><td style="text-align: center;"><img src="legend/_4_ภทอก1.png" /></td><td>ภูทอก</td></tr><tr><td style="text-align: center;"><img src="legend/_4_มหาสารคาม2.png" /></td><td>มหาสารคาม</td></tr></table>', layer: layer__4},
-            {label: 'อุทกธรณีวิทยา<br /><table><tr><td style="text-align: center;"><img src="legend/_3_ชนหนอมนำหนชดมหาสารคาม0.png" /></td><td>ชั้นหินอุ้มน้ำหินชุดมหาสารคาม</td></tr></table>', layer: layer__3},
-            {label: '<img src="legend/_2.png" /> บ่อบาดาล', layer: layer__2},]},
-        {label: '<b>แผนที่ฐาน</b>', collapsed: true, selectAllCheckbox: true, children: [
+            {label: '<img src="legend/_7.png" /> บ่อบาดาล', layer: cluster__7},
+            {label: 'การใช้ประโยชน์ที่ดิน<br /><table><tr><td style="text-align: center;"><img src="legend/_6_กลวย0.png" /></td><td>กล้วย</td></tr><tr><td style="text-align: center;"><img src="legend/_6_ขาวโพด1.png" /></td><td>ข้าวโพด</td></tr><tr><td style="text-align: center;"><img src="legend/_6_นาขาว2.png" /></td><td>นาข้าว</td></tr><tr><td style="text-align: center;"><img src="legend/_6_ปศสตว3.png" /></td><td>ปศุสัตว์</td></tr><tr><td style="text-align: center;"><img src="legend/_6_ปาไม4.png" /></td><td>ป่าไม้</td></tr><tr><td style="text-align: center;"><img src="legend/_6_ปาลมนำมน5.png" /></td><td>ปาล์มน้ำมัน</td></tr><tr><td style="text-align: center;"><img src="legend/_6_พนทเกษตรกรรม6.png" /></td><td>พื้นที่เกษตรกรรม</td></tr><tr><td style="text-align: center;"><img src="legend/_6_พนทชมชน7.png" /></td><td>พื้นที่ชุมชน</td></tr><tr><td style="text-align: center;"><img src="legend/_6_พนทเบดเตลด8.png" /></td><td>พื้นที่เบ็ดเตล็ด</td></tr><tr><td style="text-align: center;"><img src="legend/_6_มะมวง9.png" /></td><td>มะม่วง</td></tr><tr><td style="text-align: center;"><img src="legend/_6_มนสำปะหลง10.png" /></td><td>มันสำปะหลัง</td></tr><tr><td style="text-align: center;"><img src="legend/_6_ยางพารา11.png" /></td><td>ยางพารา</td></tr><tr><td style="text-align: center;"><img src="legend/_6_ยคาลปตส12.png" /></td><td>ยูคาลิปตัส</td></tr><tr><td style="text-align: center;"><img src="legend/_6_สก13.png" /></td><td>สัก</td></tr><tr><td style="text-align: center;"><img src="legend/_6_เหมอง14.png" /></td><td>เหมือง</td></tr><tr><td style="text-align: center;"><img src="legend/_6_แหลงนำ15.png" /></td><td>แหล่งน้ำ</td></tr><tr><td style="text-align: center;"><img src="legend/_6_ออย16.png" /></td><td>อ้อย</td></tr><tr><td style="text-align: center;"><img src="legend/_6_อตสาหกรรม17.png" /></td><td>อุตสาหกรรม</td></tr><tr><td style="text-align: center;"><img src="legend/_6_18.png" /></td><td></td></tr></table>', layer: layer__6},
+            {label: 'ชุดดิน<br /><table><tr><td style="text-align: center;"><img src="legend/_5_กลารองไห0.png" /></td><td>กุลาร้องไห้</td></tr><tr><td style="text-align: center;"><img src="legend/_5_คง1.png" /></td><td>คง</td></tr><tr><td style="text-align: center;"><img src="legend/_5_โนนแดง2.png" /></td><td>โนนแดง</td></tr><tr><td style="text-align: center;"><img src="legend/_5_บานไผ3.png" /></td><td>บ้านไผ่</td></tr><tr><td style="text-align: center;"><img src="legend/_5_พล4.png" /></td><td>พล</td></tr><tr><td style="text-align: center;"><img src="legend/_5_พนทนำ5.png" /></td><td>พื้นที่น้ำ</td></tr><tr><td style="text-align: center;"><img src="legend/_5_มหาสารคาม6.png" /></td><td>มหาสารคาม</td></tr><tr><td style="text-align: center;"><img src="legend/_5_รอยเอด7.png" /></td><td>ร้อยเอ็ด</td></tr><tr><td style="text-align: center;"><img src="legend/_5_อบล8.png" /></td><td>อุบล</td></tr></table>', layer: layer__5},
+            {label: 'พื้นที่เสี่ยงภัยแล้ง<br /><table><tr><td style="text-align: center;"><img src="legend/_4_ไมเกน3ครงในรอบ10ป0.png" /></td><td>ไม่เกิน 3 ครั้งในรอบ 10 ปี</td></tr><tr><td style="text-align: center;"><img src="legend/_4_45ครงในรอบ10ป1.png" /></td><td>4-5 ครั้งในรอบ 10 ปี</td></tr><tr><td style="text-align: center;"><img src="legend/_4_ตงแต6ครงขนไปในรอบ10ป2.png" /></td><td>ตั้งแต่ 6 ครั้งขึ้นไปในรอบ 10 ปี</td></tr></table>', layer: layer__4},
+            {label: 'หน่วยหินทางธรณีวิทยา<br /><table><tr><td style="text-align: center;"><img src="legend/_3_ตะกอนธารนำพา0.png" /></td><td>ตะกอนธารน้ำพา</td></tr><tr><td style="text-align: center;"><img src="legend/_3_ภทอก1.png" /></td><td>ภูทอก</td></tr><tr><td style="text-align: center;"><img src="legend/_3_มหาสารคาม2.png" /></td><td>มหาสารคาม</td></tr></table>', layer: layer__3},
+            {label: 'อุทกธรณีวิทยา<br /><table><tr><td style="text-align: center;"><img src="legend/_2_ชนหนอมนำหนชดมหาสารคาม0.png" /></td><td>ชั้นหินอุ้มน้ำหินชุดมหาสารคาม</td></tr></table>', layer: layer__2},]},
+        {label: '<b>แผนที่ฐาน</b>',  selectAllCheckbox: true, children: [
             {label: "Google Satellite", layer: layer_GoogleSatellite_1, radioGroup: 'bm' },
             {label: "Google Terrain", layer: layer_GoogleTerrain_0, radioGroup: 'bm' },]},]
         var lay = L.control.layers.tree(null, overlaysTree,{
@@ -1191,17 +1472,6 @@
         lay.addTo(map);
         map.on("zoomend", function(){
 
-                if (map.hasLayer(layer__2)) {
-                    if (map.getZoom() <= 13 && map.getZoom() >= 19) {
-                        layer__2.eachLayer(function (layer) {
-                            layer.openTooltip();
-                        });
-                    } else {
-                        layer__2.eachLayer(function (layer) {
-                            layer.closeTooltip();
-                        });
-                    }
-                }
                 if (map.hasLayer(layer__9)) {
                     if (map.getZoom() <= 10 && map.getZoom() >= 19) {
                         layer__9.eachLayer(function (layer) {
@@ -1224,15 +1494,70 @@
                         });
                     }
                 }
+                if (map.hasLayer(layer__11)) {
+                    if (map.getZoom() <= 10 && map.getZoom() >= 19) {
+                        layer__11.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer__11.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+                if (map.hasLayer(layer__12)) {
+                    if (map.getZoom() <= 10 && map.getZoom() >= 19) {
+                        layer__12.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer__12.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+                if (map.hasLayer(layer__13)) {
+                    if (map.getZoom() <= 10 && map.getZoom() >= 19) {
+                        layer__13.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer__13.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+                if (map.hasLayer(layer__14)) {
+                    if (map.getZoom() <= 10 && map.getZoom() >= 19) {
+                        layer__14.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer__14.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+                if (map.hasLayer(layer__15)) {
+                    if (map.getZoom() <= 10 && map.getZoom() >= 19) {
+                        layer__15.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer__15.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
         });
         setBounds();
         var i = 0;
-        layer__2.eachLayer(function(layer) {
+        layer__7.eachLayer(function(layer) {
             var context = {
                 feature: layer.feature,
                 variables: {}
             };
-            layer.bindTooltip((exp_label__2_eval_expression(context) !== null?String('<div style="color: #323232; font-size: 14pt; font-weight: bold; font-family: \'TH Sarabun New\', sans-serif;">' + exp_label__2_eval_expression(context)).replace(/\\n/g, '<br>') + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css__2'});
+            layer.bindTooltip((layer.feature.properties['หมายเลขบ่อ'] !== null?String('<div style="color: #323232; font-size: 14pt; font-weight: bold; font-family: \'TH Sarabun New\', sans-serif;">' + layer.feature.properties['หมายเลขบ่อ']).replace(/\\n/g, '<br>') + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css__7'});
             labels.push(layer);
             totalMarkers += 1;
               layer.added = true;
@@ -1245,7 +1570,7 @@
                 feature: layer.feature,
                 variables: {}
             };
-            layer.bindTooltip((layer.feature.properties['TAM_NAM_T'] !== null?String('<div style="color: #323232; font-size: 12pt; font-weight: bold; font-family: \'TH Sarabun New\', sans-serif;">' + layer.feature.properties['TAM_NAM_T']).replace(/\\n/g, '<br>') + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css__9'});
+            layer.bindTooltip((layer.feature.properties['TAM_NAM_T'] !== null?String('<div style="color: #323232; font-size: 15pt; font-weight: bold; font-family: \'TH Sarabun New\', sans-serif;">' + layer.feature.properties['TAM_NAM_T']).replace(/\\n/g, '<br>') + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css__9'});
             labels.push(layer);
             totalMarkers += 1;
               layer.added = true;
@@ -1265,17 +1590,71 @@
               addLabel(layer, i);
               i++;
         });
-                if (map.hasLayer(layer__2)) {
-                    if (map.getZoom() <= 13 && map.getZoom() >= 19) {
-                        layer__2.eachLayer(function (layer) {
-                            layer.openTooltip();
-                        });
-                    } else {
-                        layer__2.eachLayer(function (layer) {
-                            layer.closeTooltip();
-                        });
-                    }
-                }
+        var i = 0;
+        layer__11.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Name'] !== null?String('<div style="color: #000000; font-size: 18pt; font-weight: bold; font-family: \'TH Sarabun New\', sans-serif;">' + layer.feature.properties['Name']).replace(/\\n/g, '<br>') + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css__11'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer__12.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Name'] !== null?String('<div style="color: #000000; font-size: 18pt; font-weight: bold; font-family: \'TH Sarabun New\', sans-serif;">' + layer.feature.properties['Name']).replace(/\\n/g, '<br>') + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css__12'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer__13.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Name'] !== null?String('<div style="color: #000000; font-size: 18pt; font-weight: bold; font-family: \'TH Sarabun New\', sans-serif;">' + layer.feature.properties['Name']).replace(/\\n/g, '<br>') + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css__13'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer__14.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Name'] !== null?String('<div style="color: #000000; font-size: 18pt; font-weight: bold; font-family: \'TH Sarabun New\', sans-serif;">' + layer.feature.properties['Name']).replace(/\\n/g, '<br>') + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css__14'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer__15.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Name'] !== null?String('<div style="color: #000000; font-size: 18pt; font-weight: bold; font-family: \'TH Sarabun New\', sans-serif;">' + layer.feature.properties['Name']).replace(/\\n/g, '<br>') + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css__15'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
                 if (map.hasLayer(layer__9)) {
                     if (map.getZoom() <= 10 && map.getZoom() >= 19) {
                         layer__9.eachLayer(function (layer) {
@@ -1298,15 +1677,70 @@
                         });
                     }
                 }
-        resetLabels([layer__2,layer__9,layer__10]);
+                if (map.hasLayer(layer__11)) {
+                    if (map.getZoom() <= 10 && map.getZoom() >= 19) {
+                        layer__11.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer__11.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+                if (map.hasLayer(layer__12)) {
+                    if (map.getZoom() <= 10 && map.getZoom() >= 19) {
+                        layer__12.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer__12.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+                if (map.hasLayer(layer__13)) {
+                    if (map.getZoom() <= 10 && map.getZoom() >= 19) {
+                        layer__13.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer__13.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+                if (map.hasLayer(layer__14)) {
+                    if (map.getZoom() <= 10 && map.getZoom() >= 19) {
+                        layer__14.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer__14.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+                if (map.hasLayer(layer__15)) {
+                    if (map.getZoom() <= 10 && map.getZoom() >= 19) {
+                        layer__15.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer__15.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+        resetLabels([layer__7,layer__9,layer__10,layer__11,layer__12,layer__13,layer__14,layer__15]);
         map.on("zoomend", function(){
-            resetLabels([layer__2,layer__9,layer__10]);
+            resetLabels([layer__7,layer__9,layer__10,layer__11,layer__12,layer__13,layer__14,layer__15]);
         });
         map.on("layeradd", function(){
-            resetLabels([layer__2,layer__9,layer__10]);
+            resetLabels([layer__7,layer__9,layer__10,layer__11,layer__12,layer__13,layer__14,layer__15]);
         });
         map.on("layerremove", function(){
-            resetLabels([layer__2,layer__9,layer__10]);
+            resetLabels([layer__7,layer__9,layer__10,layer__11,layer__12,layer__13,layer__14,layer__15]);
         });
         </script>        
     </body>

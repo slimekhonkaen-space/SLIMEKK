@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25.51 28.65">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        font-family: THSarabunPSK-Bold, 'TH SarabunPSK';
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .cls-2 {
+        fill: #231f20;
+      }
+    </style>
+  </defs>
+  <g id="Pic">
+    <path class="cls-2" d="M24.65,8.17c2.53,6.57-.74,13.95-7.31,16.49-6.57,2.54-13.95-.74-16.49-7.31C-1.68,10.77,1.59,3.39,8.17.86c6.57-2.53,13.95.74,16.49,7.31Z"/>
+    <text class="cls-1" transform="translate(7.82 17.92)"><tspan x="0" y="0">5</tspan></text>
+  </g>
+</svg>
