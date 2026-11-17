@@ -53,7 +53,7 @@
 </head>
 <body onload="init()">
 <div id="map"></div>
-<div id="panel">
+<div id="panel" class="collapsed">
   <h3 onclick="this.parentNode.classList.toggle('collapsed')">ชั้นข้อมูล ▾</h3>
   <div id="panelBody">
     <div class="grp">
@@ -210,20 +210,15 @@ const GROUPS = [
 
 /* ---------- 1.3 แผนที่ฐาน ---------- */
 const BASEMAPS = [
-  ['NORMAL', 'Longdo แผนที่ปกติ'], ['GRAY', 'Longdo สีเทา'], ['LIGHT', 'Longdo สีอ่อน'],
-  ['DARK', 'Longdo สีเข้ม'], ['EASY', 'Longdo แบบเรียบง่าย'], ['POLITICAL', 'เขตการปกครอง'],
-  ['THAICHOTE', 'ภาพดาวเทียมไทยโชต'],
+  ['NORMAL', 'Longdo แผนที่ปกติ'], ['DARK', 'Longdo สีเข้ม'], ['POLITICAL', 'เขตการปกครอง'],
   ['GOOGLE_SATELLITE', 'Google ภาพดาวเทียม'], ['GOOGLE_HYBRID', 'Google ดาวเทียม + ถนน'],
-  ['GOOGLE_ROADMAP', 'Google แผนที่ถนน'],
+  ['GOOGLE_ROADMAP', 'Google แผนที่ถนน'], ['THAICHOTE', 'ภาพดาวเทียมไทยโชต'],
   ['SPHERE_HYBRID', 'Sphere ดาวเทียม + ถนน'], ['SPHERE_STREETS', 'Sphere ถนน'],
   ['SPHERE_SIMPLE', 'Sphere เรียบง่าย'], ['SPHERE_IMAGES', 'Sphere ภาพถ่าย'],
-  ['OSM', 'OpenStreetMap'], ['OSM_COLORFUL', 'OSM สีสด'], ['OSM_GRAYBEARD', 'OSM โทนเทา'],
-  ['OSM_NEUTRINO', 'OSM Neutrino'], ['OSM_SHADOW', 'OSM Shadow'],
-  ['TOMTOM_NORMAL', 'TomTom'], ['MAPLIBRE_WORLD', 'MapLibre World']
+  ['OSM', 'OpenStreetMap'],  ['OSM_GRAYBEARD', 'OSM โทนเทา']
 ];
 const BASE_OVERLAYS = [
-  ['TRAFFIC', 'การจราจร (Longdo)'], ['GOOGLE_TRAFFIC', 'การจราจร (Google)'],
-  ['RASTER_POI', 'สถานที่สำคัญ (POI)']
+  ['TRAFFIC', 'การจราจร (Longdo)']
 ];
 
 /* ---------- 1.4 ชุดสีสำรอง (ใช้กับค่าที่ไม่ได้ใส่ใน customColors) ---------- */
